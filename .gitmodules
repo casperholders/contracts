@@ -1,0 +1,12 @@
+[submodule "contracts/erc20"]
+	path = contracts/erc20
+	url = https://github.com/casper-ecosystem/erc20.git
+[submodule "contracts/cep47"]
+	path = contracts/cep47
+	url = https://github.com/casper-ecosystem/casper-nft-cep47.git
+[submodule "contracts/cep78"]
+	path = contracts/cep78
+	url = https://github.com/casper-ecosystem/cep-78-enhanced-nft.git
+[submodule "contracts/uniswap_erc20"]
+	path = contracts/uniswap_erc20
+	url = https://github.com/Rengo-Labs/CasperLabs-UniswapV2-Core

@@ -1,0 +1,101 @@
+name: Build and release
+'on':
+  workflow_dispatch: null
+  push:
+    branches:
+      - main
+jobs:
+  CEP78:
+    timeout-minutes: 120
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly-2022-02-09
+          profile: minimal
+          components: rustfmt, clippy
+      # Needed for gcc install
+      - run: sudo apt update && sudo apt install -y build-essential wabt binaryen
+      - uses: Swatinem/rust-cache@v1
+      - run: make build-cep78
+      - name: Upload CEP78 contract
+        uses: actions/upload-artifact@v3
+        with:
+          name: cep78
+          path: |
+            contracts/cep78/contract/target/wasm32-unknown-unknown/release/contract.wasm
+            contracts/cep78/client/mint_session/target/wasm32-unknown-unknown/release/mint_call.wasm
+            contracts/cep78/client/balance_of_session/target/wasm32-unknown-unknown/release/balance_of_call.wasm
+            contracts/cep78/client/owner_of_session/target/wasm32-unknown-unknown/release/owner_of_call.wasm
+            contracts/cep78/client/get_approved_session/target/wasm32-unknown-unknown/release/get_approved_call.wasm
+            contracts/cep78/client/transfer_session/target/wasm32-unknown-unknown/release/transfer_call.wasm
+  CEP47:
+    timeout-minutes: 120
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly-2022-03-17
+          profile: minimal
+          components: rustfmt, clippy
+      # Needed for gcc install
+      - run: sudo apt update && sudo apt install -y build-essential wabt binaryen
+      - uses: Swatinem/rust-cache@v1
+      - run: make build-cep47
+      - name: Upload cep47 contract
+        uses: actions/upload-artifact@v3
+        with:
+          name: cep47
+          path: contracts/cep47/target/wasm32-unknown-unknown/release/cep47-token.wasm
+  ERC20:
+    timeout-minutes: 120
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly-2021-06-17
+          profile: minimal
+          components: rustfmt, clippy
+      # Needed for gcc install
+      - run: sudo apt update && sudo apt install -y build-essential wabt binaryen
+      - uses: Swatinem/rust-cache@v1
+      - run: make build-erc20
+      - name: Upload erc20 contract
+        uses: actions/upload-artifact@v3
+        with:
+          name: erc20
+          path: contracts/erc20/target/wasm32-unknown-unknown/release/erc20_token.wasm
+  UniswapERC20:
+    timeout-minutes: 120
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly-2022-01-13
+          profile: minimal
+          components: rustfmt, clippy
+      # Needed for gcc install
+      - run: sudo apt update && sudo apt install -y build-essential wabt binaryen
+      - uses: Swatinem/rust-cache@v1
+      - run: make build-uniswap-erc20
+      - name: Upload uniswap-erc20 contract
+        uses: actions/upload-artifact@v3
+        with:
+          name: uniswap-erc20
+          path: contracts/uniswap_erc20/erc20/target/wasm32-unknown-unknown/release/erc20-token.wasm
